@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use std::fs;
 
 use crate::models::{DBState, Epic, Status, Story};
@@ -30,7 +30,11 @@ impl JiraDatabase {
     }
 
     pub fn create_story(&self, story: Story, epic_id: u32) -> Result<u32> {
-        todo!()
+        let mut db = self.database.read_db()?;
+
+        let epic = db.epics.get(&epic_id).ok_or_else(|| anyhow!("Epic not found"))?;
+
+        Ok(1)
     }
 
     pub fn delete_epic(&self, epic_id: u32) -> Result<()> {
@@ -161,7 +165,6 @@ mod tests {
 
         let epic_id = result.unwrap();
 
-        // TODO: fix this error by deriving the appropriate traits for Story
         let result = db.create_story(story.clone(), epic_id);
         assert_eq!(result.is_ok(), true);
 
