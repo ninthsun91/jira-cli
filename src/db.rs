@@ -9,7 +9,13 @@ pub struct JiraDatabase {
 
 impl JiraDatabase {
     pub fn new(file_path: String) -> Self {
-        todo!()
+        Self {
+            database: Box::new(
+                JSONFileDatabase {
+                    file_path
+                }
+            )
+        }
     }
 
     pub fn read_db(&self) -> Result<DBState> {
@@ -46,6 +52,24 @@ trait Database {
     fn write_db(&self, db_state: &DBState) -> Result<()>;
 }
 
+struct JSONFileDatabase {
+    pub file_path: String,
+}
+
+impl Database for JSONFileDatabase {
+    fn read_db(&self) -> Result<DBState> {
+        let db_content = fs::read_to_string(&self.file_path)?;
+        let parsed_db: DBState = serde_json::from_str(&db_content)?;
+        Ok(parsed_db)
+    }
+
+    fn write_db(&self, db_state: &DBState) -> Result<()> {
+        let byte_array = serde_json::to_vec(&db_state)?;
+        fs::write(&self.file_path, byte_array)?;
+        Ok(())
+    }
+}
+
 pub mod test_utils {
     use std::{cell::RefCell, collections::HashMap};
 
@@ -78,24 +102,6 @@ pub mod test_utils {
             *latest_state.borrow_mut() = db_state.clone();
             Ok(())
         }
-    }
-}
-
-struct JSONFileDatabase {
-    pub file_path: String,
-}
-
-impl Database for JSONFileDatabase {
-    fn read_db(&self) -> Result<DBState> {
-        let db_content = fs::read_to_string(&self.file_path)?;
-        let parsed_db: DBState = serde_json::from_str(&db_content)?;
-        Ok(parsed_db)
-    }
-
-    fn write_db(&self, db_state: &DBState) -> Result<()> {
-        let byte_array = serde_json::to_vec(&db_state)?;
-        fs::write(&self.file_path, byte_array)?;
-        Ok(())
     }
 }
 
