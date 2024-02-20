@@ -44,7 +44,11 @@ impl JiraDatabase {
     pub fn delete_epic(&self, epic_id: u32) -> Result<()> {
         let mut db = self.read_db()?;
 
-        db.epics.remove(&epic_id).ok_or_else(|| anyhow!("Epic not found"))?;
+        let epic = db.epics.get(&epic_id).ok_or_else(|| anyhow!("Epic not found {}", epic_id))?;
+        epic.stories.iter().map(|story_id| {
+            db.stories.remove(story_id).ok_or_else(|| anyhow!("Failed to delete Story {}", story_id))
+        }).collect::<Result<Vec<_>>>()?;
+        db.epics.remove(&epic_id).ok_or_else(|| anyhow!("Failed to delete Epic {}", epic_id))?;
 
         self.database.write_db(&db)?;
         Ok(())
