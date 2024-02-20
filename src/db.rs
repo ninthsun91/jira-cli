@@ -19,7 +19,7 @@ impl JiraDatabase {
     }
 
     pub fn create_epic(&self, epic: Epic) -> Result<u32> {
-        let mut db = self.database.read_db()?;
+        let mut db = self.read_db()?;
 
         db.last_item_id += 1;
         db.epics.insert(db.last_item_id, epic);
@@ -30,11 +30,15 @@ impl JiraDatabase {
     }
 
     pub fn create_story(&self, story: Story, epic_id: u32) -> Result<u32> {
-        let mut db = self.database.read_db()?;
+        let mut db = self.read_db()?;
+        let epic = db.epics.get_mut(&epic_id).ok_or_else(|| anyhow!("Epic not found"))?;
 
-        let epic = db.epics.get(&epic_id).ok_or_else(|| anyhow!("Epic not found"))?;
+        db.last_item_id += 1;
+        db.stories.insert(db.last_item_id, story);
+        epic.stories.push(db.last_item_id);
 
-        Ok(1)
+        self.database.write_db(&db)?;
+        Ok(db.last_item_id)
     }
 
     pub fn delete_epic(&self, epic_id: u32) -> Result<()> {
