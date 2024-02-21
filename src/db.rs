@@ -60,6 +60,10 @@ impl JiraDatabase {
         let epic = db.epics.get_mut(&epic_id).ok_or_else(|| anyhow!("Epic not found {}", epic_id))?;
         let story_index = epic.stories.iter().position(|id| id == &story_id).ok_or_else(|| anyhow!("Story {} not found in Epic {}", story_id, epic_id))?;
 
+        epic.stories.remove(story_index);
+        db.stories.remove(&story_id).ok_or_else(|| anyhow!("Failed to delete Story {}", story_id))?;
+
+        self.database.write_db(&db)?;
         Ok(())
     }
 
