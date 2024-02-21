@@ -55,7 +55,12 @@ impl JiraDatabase {
     }
 
     pub fn delete_story(&self, epic_id: u32, story_id: u32) -> Result<()> {
-        todo!()
+        let mut db = self.read_db()?;
+
+        let epic = db.epics.get_mut(&epic_id).ok_or_else(|| anyhow!("Epic not found {}", epic_id))?;
+        let story_index = epic.stories.iter().position(|id| id == &story_id).ok_or_else(|| anyhow!("Story {} not found in Epic {}", story_id, epic_id))?;
+
+        Ok(())
     }
 
     pub fn update_epic_status(&self, epic_id: u32, status: Status) -> Result<()> {
