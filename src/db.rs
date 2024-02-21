@@ -71,6 +71,7 @@ impl JiraDatabase {
         let mut db = self.read_db()?;
 
         let epic = db.epics.get_mut(&epic_id).ok_or_else(|| anyhow!("Epic not found {}", epic_id))?;
+        epic.status = status;
 
         self.database.write_db(&db)?;
         Ok(())
