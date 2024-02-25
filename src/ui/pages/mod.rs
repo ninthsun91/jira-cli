@@ -172,7 +172,14 @@ impl Page for StoryDetail {
     }
 
     fn handle_input(&self, input: &str) -> Result<Option<Action>> {
-        todo!() // match against the user input and return the corresponding action. If the user input was invalid return None.
+        let epic_id = self.epic_id;
+        let story_id = self.story_id;
+        match input {
+            "p" => Ok(Some(Action::NavigateToPreviousPage)),
+            "u" => Ok(Some(Action::UpdateStoryStatus { story_id })),
+            "d" => Ok(Some(Action::DeleteStory { epic_id, story_id })),
+            _ => Ok(None),
+        }
     }
 }
 
