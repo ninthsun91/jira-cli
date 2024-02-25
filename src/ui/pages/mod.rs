@@ -45,7 +45,20 @@ impl Page for HomePage {
     }
 
     fn handle_input(&self, input: &str) -> Result<Option<Action>> {
-        todo!() // match against the user input and return the corresponding action. If the user input was invalid return None.
+        match input {
+            "q" => Ok(Some(Action::Exit)),
+            "c" => Ok(Some(Action::CreateEpic)),
+            id if id.parse::<u32>().is_ok() => {
+                let epic_id = id.parse::<u32>().unwrap();
+                let is_valid_epic_id = self.db.read_db()?.epics.contains_key(&epic_id);
+                if is_valid_epic_id {
+                    Ok(Some(Action::NavigateToEpicDetail { epic_id }))
+                } else {
+                    Ok(None)
+                }
+            },
+            _ => Ok(None),
+        }
     }
 }
 
