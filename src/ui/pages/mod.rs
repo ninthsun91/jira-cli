@@ -151,6 +151,17 @@ impl Page for StoryDetail {
         println!("  id  |     name     |         description         |    status    ");
         
         // TODO: print out story details using get_column_string()
+        let story_id_length = "  id  ".len() - 1;
+        let story_name_length = "     name     ".len() - 2;
+        let story_description_length = "         description         ".len() - 2;
+        let story_status_length = "    status    ".len() - 1;
+        println!(
+            "{id} | {name} | {description} | {status}",
+            id = get_column_string(&self.story_id.to_string(), story_id_length),
+            name = get_column_string(&story.name, story_name_length),
+            description = get_column_string(&story.description, story_description_length),
+            status = get_column_string(&story.status.to_string(), story_status_length)
+        );
         
         println!();
         println!();
