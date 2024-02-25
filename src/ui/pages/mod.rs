@@ -116,7 +116,23 @@ impl Page for EpicDetail {
     }
 
     fn handle_input(&self, input: &str) -> Result<Option<Action>> {
-        todo!() // match against the user input and return the corresponding action. If the user input was invalid return None.
+        let epic_id = self.epic_id;
+        match input {
+            "p" => Ok(Some(Action::NavigateToPreviousPage)),
+            "u" => Ok(Some(Action::UpdateEpicStatus { epic_id })),
+            "d" => Ok(Some(Action::DeleteEpic { epic_id })),
+            "c" => Ok(Some(Action::CreateStory { epic_id })),
+            id if id.parse::<u32>().is_ok() => {
+                let story_id = id.parse::<u32>().unwrap();
+                let is_valid_story_id = self.db.read_db()?.stories.contains_key(&story_id);
+                if is_valid_story_id {
+                    Ok(Some(Action::NavigateToStoryDetail { epic_id, story_id }))
+                } else {
+                    Ok(None)
+                }
+            },
+            _ => Ok(None),
+        }
     }
 }
 
