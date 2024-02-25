@@ -75,7 +75,17 @@ impl Page for EpicDetail {
         println!("------------------------------ EPIC ------------------------------");
         println!("  id  |     name     |         description         |    status    ");
 
-        // TODO: print out epic details using get_column_string()
+        let epic_id_length = "  id  ".len() - 1;
+        let epic_name_length = "     name     ".len() - 2;
+        let epic_description_length = "         description         ".len() - 2;
+        let epic_status_length = "    status    ".len() - 1;
+        println!(
+            "{id} | {name} | {description} | {status}",
+            id = get_column_string(&self.epic_id.to_string(), epic_id_length),
+            name = get_column_string(&epic.name, epic_name_length),
+            description = get_column_string(&epic.description, epic_description_length),
+            status = get_column_string(&epic.status.to_string(), epic_status_length)
+        );
   
         println!();
 
@@ -83,8 +93,19 @@ impl Page for EpicDetail {
         println!("     id     |               name               |      status      ");
 
         let stories = &db_state.stories;
-
-        // TODO: print out stories using get_column_string(). also make sure the stories are sorted by id
+        stories.iter()
+            .sorted_unstable_by_key(|&(id, _)| id)
+            .for_each(|(id, story)| {
+                let story_id_length = "     id     ".len() - 1;
+                let story_name_length = "               name               ".len() - 2;
+                let story_status_length = "      status      ".len() - 1;
+                println!(
+                    "{id} | {name} | {status}",
+                    id = get_column_string(&id.to_string(), story_id_length),
+                    name = get_column_string(&story.name, story_name_length),
+                    status = get_column_string(&story.status.to_string(), story_status_length)
+                );
+            });
 
         println!();
         println!();
@@ -131,7 +152,7 @@ impl Page for StoryDetail {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{db::test_utils::MockDB};
+    use crate::db::test_utils::MockDB;
     use crate::models::{Epic, Story};
 
     mod home_page {
