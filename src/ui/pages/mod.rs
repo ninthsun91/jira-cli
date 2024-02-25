@@ -23,7 +23,18 @@ impl Page for HomePage {
         println!("----------------------------- EPICS -----------------------------");
         println!("     id     |               name               |      status      ");
 
-        // TODO: print out epics using get_column_string(). also make sure the epics are sorted by id
+        let id_length = "     id     ".len() - 1;
+        let name_length = "               name               ".len() - 2;
+        let status_length = "      status      ".len() - 1;
+        self.db.read_db()?.epics
+            .iter()
+            .sorted_unstable_by_key(|&(id, _)| id)
+            .for_each(|(id, epic)| {
+                let id = get_column_string(&id.to_string(), id_length);
+                let name = get_column_string(&epic.name, name_length);
+                let status = get_column_string(&epic.status.to_string(), status_length);
+                println!("{id} | {name} | {status}");
+            });
 
         println!();
         println!();
