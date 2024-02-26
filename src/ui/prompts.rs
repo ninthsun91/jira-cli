@@ -30,7 +30,12 @@ fn create_epic_prompt() -> Epic {
 }
 
 fn create_story_prompt() -> Story {
-    todo!();
+    println!("Story Name:");
+    let story_name = get_user_input().trim().to_string();
+    println!("Story Description:");
+    let story_description = get_user_input().trim().to_string();
+
+    Story::new(story_name, story_description)
 }
 
 fn delete_epic_prompt() -> bool {
