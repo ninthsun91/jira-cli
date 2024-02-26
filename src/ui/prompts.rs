@@ -21,7 +21,12 @@ impl Prompts {
 }
 
 fn create_epic_prompt() -> Epic {
-    todo!();
+    println!("Epic Name:");
+    let epic_name = get_user_input().trim().to_owned();
+    println!("Epic Description:");
+    let epic_description = get_user_input().trim().to_string();
+
+    Epic::new(epic_name, epic_description)
 }
 
 fn create_story_prompt() -> Story {
