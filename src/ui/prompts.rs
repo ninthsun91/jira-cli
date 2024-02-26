@@ -21,6 +21,8 @@ impl Prompts {
 }
 
 fn create_epic_prompt() -> Epic {
+    println!("----------------------------");
+
     println!("Epic Name:");
     let epic_name = get_user_input().trim().to_owned();
     println!("Epic Description:");
@@ -30,6 +32,8 @@ fn create_epic_prompt() -> Epic {
 }
 
 fn create_story_prompt() -> Story {
+    println!("----------------------------");
+
     println!("Story Name:");
     let story_name = get_user_input().trim().to_string();
     println!("Story Description:");
@@ -39,7 +43,20 @@ fn create_story_prompt() -> Story {
 }
 
 fn delete_epic_prompt() -> bool {
-    todo!();
+    println!("----------------------------");
+
+    println!("Are you sure you want to delete this epic? All stories in this epic will also be deleted [Y/n]:");
+    let input = get_user_input();
+
+    match input.trim() {
+        "" => true,
+        "Y" => true,
+        _ => false,
+    }
+
+    // if input.trim().eq("Y") {
+    //     return true;
+    // }
 }
 
 fn delete_story_prompt() -> bool {
