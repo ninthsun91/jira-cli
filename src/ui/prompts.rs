@@ -60,7 +60,16 @@ fn delete_epic_prompt() -> bool {
 }
 
 fn delete_story_prompt() -> bool {
-    todo!();
+    println!("----------------------------");
+
+    println!("Are you sure you want to delete this story? [Y/n]: Y");
+    let input = get_user_input();
+
+    match input.trim() {
+        "" => true,
+        "Y" => true,
+        _ => false,
+    }
 }
 
 fn update_status_prompt() -> Option<Status> {
