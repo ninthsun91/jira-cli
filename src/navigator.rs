@@ -11,11 +11,17 @@ pub struct Navigator {
 
 impl Navigator {
     pub fn new(db: Rc<JiraDatabase>) -> Self {
-        todo!()
+        let home_page = Box::new(HomePage { db: db.clone() });
+        let prompts = Prompts::new();
+        Navigator {
+            pages: vec![home_page],
+            prompts,
+            db,
+        }
     }
 
     pub fn get_current_page(&self) -> Option<&Box<dyn Page>> {
-        todo!() // this should always return the last element in the pages vector
+        self.pages.last()
     }
 
     pub fn handle_action(&mut self, action: Action) -> Result<()> {
