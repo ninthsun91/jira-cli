@@ -63,7 +63,7 @@ impl Navigator {
                 // prompt the user to delete the story and persist it in the database
             }
             Action::Exit => {
-                // remove all pages from the pages vector
+                self.pages.clear();
             },
         }
 
