@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result, Context, Ok};
-use std::rc::Rc;
+use std::{borrow::Borrow, rc::Rc};
 
 use crate::{ui::{Page, HomePage, EpicDetail, StoryDetail, Prompts}, db::JiraDatabase, models::Action};
 
@@ -45,7 +45,8 @@ impl Navigator {
                 self.pages.pop();
             }
             Action::CreateEpic => {
-                // prompt the user to create a new epic and persist it in the database
+                let epic = self.prompts.create_epic.as_ref()();
+                self.db.create_epic(epic)?;
             }
             Action::UpdateEpicStatus { epic_id } => {
                 // prompt the user to update status and persist it in the database
