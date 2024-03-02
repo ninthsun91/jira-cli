@@ -27,34 +27,43 @@ impl Navigator {
     pub fn handle_action(&mut self, action: Action) -> Result<()> {
         match action {
             Action::NavigateToEpicDetail { epic_id } => {
-                todo!() // create a new EpicDetail instance and add it to the pages vector
+                let epic_page = EpicDetail {
+                    db: self.db.clone(),
+                    epic_id,
+                };
+                self.pages.push(Box::new(epic_page));
             }
             Action::NavigateToStoryDetail { epic_id, story_id } => {
-                todo!() // create a new StoryDetail instance and add it to the pages vector
+                let story_page = StoryDetail {
+                    db: self.db.clone(),
+                    epic_id,
+                    story_id,
+                };
+                self.pages.push(Box::new(story_page));
             }
             Action::NavigateToPreviousPage => {
-                todo!() // remove the last page from the pages vector
+                self.pages.pop();
             }
             Action::CreateEpic => {
-                todo!() // prompt the user to create a new epic and persist it in the database
+                // prompt the user to create a new epic and persist it in the database
             }
             Action::UpdateEpicStatus { epic_id } => {
-                todo!() // prompt the user to update status and persist it in the database
+                // prompt the user to update status and persist it in the database
             }
             Action::DeleteEpic { epic_id } => {
-                todo!() // prompt the user to delete the epic and persist it in the database
+                // prompt the user to delete the epic and persist it in the database
             }
             Action::CreateStory { epic_id } => {
-                todo!() // prompt the user to create a new story and persist it in the database
+                // prompt the user to create a new story and persist it in the database
             }
             Action::UpdateStoryStatus { story_id } => {
-                todo!() // prompt the user to update status and persist it in the database
+                // prompt the user to update status and persist it in the database
             }
             Action::DeleteStory { epic_id, story_id } => {
-                todo!() // prompt the user to delete the story and persist it in the database
+                // prompt the user to delete the story and persist it in the database
             }
             Action::Exit => {
-                todo!() // remove all pages from the pages vector
+                // remove all pages from the pages vector
             },
         }
 
