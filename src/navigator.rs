@@ -11,7 +11,7 @@ pub struct Navigator {
 
 impl Navigator {
     pub fn new(db: Rc<JiraDatabase>) -> Self {
-        let home_page = Box::new(HomePage { db: db.clone() });
+        let home_page = Box::new(HomePage { db: Rc::clone(&db) });
         let prompts = Prompts::new();
         Navigator {
             pages: vec![home_page],
@@ -28,14 +28,14 @@ impl Navigator {
         match action {
             Action::NavigateToEpicDetail { epic_id } => {
                 let epic_page = EpicDetail {
-                    db: self.db.clone(),
+                    db: Rc::clone(&self.db),
                     epic_id,
                 };
                 self.pages.push(Box::new(epic_page));
             }
             Action::NavigateToStoryDetail { epic_id, story_id } => {
                 let story_page = StoryDetail {
-                    db: self.db.clone(),
+                    db: Rc::clone(&self.db),
                     epic_id,
                     story_id,
                 };
