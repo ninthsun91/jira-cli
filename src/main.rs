@@ -44,7 +44,5 @@ fn main() {
         if let Some(action) = action {
             nav.handle_action(action).expect("Navigator failed to handle action");
         }
-
-        break;
     }
 }

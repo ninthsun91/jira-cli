@@ -58,6 +58,7 @@ impl Navigator {
                 let should_delete = self.prompts.delete_epic.as_ref()();
                 if should_delete {
                     self.db.delete_epic(epic_id).with_context(|| anyhow!("Failed to delete Epic {}", epic_id))?;
+                    self.pages.pop();
                 }
             }
             Action::CreateStory { epic_id } => {
@@ -74,6 +75,7 @@ impl Navigator {
                 let should_delete = self.prompts.delete_story.as_ref()();
                 if should_delete {
                     self.db.delete_story(epic_id, story_id).with_context(|| anyhow!("Failed to delete Story {} in Epic {}", story_id, epic_id))?;
+                    self.pages.pop();
                 }
             }
             Action::Exit => {
