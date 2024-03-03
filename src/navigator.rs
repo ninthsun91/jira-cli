@@ -55,14 +55,14 @@ impl Navigator {
                 }
             }
             Action::DeleteEpic { epic_id } => {
-                // prompt the user to delete the epic and persist it in the database
                 let is_deleted = self.prompts.delete_epic.as_ref()();
                 if is_deleted {
                     self.db.delete_epic(epic_id).with_context(|| anyhow!("Failed to delete Epic {}", epic_id))?;
                 }
             }
             Action::CreateStory { epic_id } => {
-                // prompt the user to create a new story and persist it in the database
+                let story = self.prompts.create_story.as_ref()();
+                self.db.create_story(story, epic_id).with_context(|| anyhow!("Failed to create Story"))?;
             }
             Action::UpdateStoryStatus { story_id } => {
                 // prompt the user to update status and persist it in the database
