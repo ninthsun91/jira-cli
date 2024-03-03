@@ -13,9 +13,13 @@ use io_utils::*;
 mod navigator;
 use navigator::*;
 
+const DB_FILE_PATH: &str = "data/db.json";
+
 fn main() {
     // TODO: create database and navigator
-    
+    let db = Rc::new(JiraDatabase::new(DB_FILE_PATH.to_string()));
+    let nav = Navigator::new(Rc::clone(&db));
+
     loop {
         clearscreen::clear().unwrap();
 
