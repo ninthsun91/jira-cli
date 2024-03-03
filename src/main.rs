@@ -16,33 +16,41 @@ use navigator::*;
 const DB_FILE_PATH: &str = "data/db.json";
 
 fn main() {
-    // TODO: create database and navigator
     let db = Rc::new(JiraDatabase::new(DB_FILE_PATH.to_string()));
     let mut nav = Navigator::new(Rc::clone(&db));
 
     loop {
         clearscreen::clear().unwrap();
 
-        // TODO: implement the following functionality:
-        // 1. get current page from navigator. If there is no current page exit the loop.
-        let current_page = nav.get_current_page();
-        if current_page.is_none() {
-            break;
-        }
+        let current_page = nav.get_current_page().unwrap_or_else(|| {
+            println!("Page not found\nPress any key to continue...");
 
-        // 2. render page
-        let page = current_page.unwrap();
-        page.draw_page().expect("Page render fail");
+            wait_for_key_press();
+            std::process::exit(1);
+        });
 
-        // 3. get user input
+        current_page.draw_page().unwrap_or_else(|err| {
+            println!("Page error - {}\nPress any key to continue...", err);
+
+            wait_for_key_press();
+            std::process::exit(1);
+        });
+
         let user_input = get_user_input();
+        let action = current_page.handle_input(&user_input).unwrap_or_else(|err| {
+            println!("User input error - {}\nPress any key to continue...", err);
 
-        // 4. pass input to page's input handler
-        let action = page.handle_input(&user_input).expect("User input fail");
+            wait_for_key_press();
+            std::process::exit(1);
+        });
 
-        // 5. if the page's input handler returns an action let the navigator process the action
         if let Some(action) = action {
-            nav.handle_action(action).expect("Navigator failed to handle action");
+            nav.handle_action(action).unwrap_or_else(|err| {
+                println!("Navigator error - {}\nPress any key to continue...", err);
+
+                wait_for_key_press();
+                std::process::exit(1);
+            });
         }
     }
 }
