@@ -50,6 +50,10 @@ impl Navigator {
             }
             Action::UpdateEpicStatus { epic_id } => {
                 // prompt the user to update status and persist it in the database
+                let status = self.prompts.update_status.as_ref()();
+                if let Some(status) = status {
+                    self.db.update_epic_status(epic_id, status)?;
+                }
             }
             Action::DeleteEpic { epic_id } => {
                 // prompt the user to delete the epic and persist it in the database
