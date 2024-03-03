@@ -7,3 +7,7 @@ pub fn get_user_input() -> String {
 
     user_input
 }
+
+pub fn wait_for_key_press() {
+    io::stdin().read_line(&mut String::new()).unwrap();
+}
