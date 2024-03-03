@@ -25,7 +25,14 @@ fn main() {
 
         // TODO: implement the following functionality:
         // 1. get current page from navigator. If there is no current page exit the loop.
+        let current_page = nav.get_current_page();
+        if current_page.is_none() {
+            break;
+        }
+
         // 2. render page
+        let render_result = current_page.unwrap().draw_page().unwrap();
+
         // 3. get user input
         // 4. pass input to page's input handler
         // 5. if the page's input handler returns an action let the navigator process the action
