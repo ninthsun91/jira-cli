@@ -65,7 +65,10 @@ impl Navigator {
                 self.db.create_story(story, epic_id).with_context(|| anyhow!("Failed to create Story"))?;
             }
             Action::UpdateStoryStatus { story_id } => {
-                // prompt the user to update status and persist it in the database
+                let status = self.prompts.update_status.as_ref()();
+                if let Some(status) = status {
+                    self.db.update_story_status(story_id, status).with_context(|| anyhow!("Failed to update Story status"))?;
+                }
             }
             Action::DeleteStory { epic_id, story_id } => {
                 // prompt the user to delete the story and persist it in the database
