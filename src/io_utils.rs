@@ -5,7 +5,7 @@ pub fn get_user_input() -> String {
 
     io::stdin().read_line(&mut user_input).unwrap();
 
-    user_input
+    user_input.trim().to_owned()
 }
 
 pub fn wait_for_key_press() {
