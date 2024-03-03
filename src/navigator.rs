@@ -46,13 +46,13 @@ impl Navigator {
             }
             Action::CreateEpic => {
                 let epic = self.prompts.create_epic.as_ref()();
-                self.db.create_epic(epic)?;
+                self.db.create_epic(epic).with_context(|| anyhow!("Failed to create Epic"))?;
             }
             Action::UpdateEpicStatus { epic_id } => {
                 // prompt the user to update status and persist it in the database
                 let status = self.prompts.update_status.as_ref()();
                 if let Some(status) = status {
-                    self.db.update_epic_status(epic_id, status)?;
+                    self.db.update_epic_status(epic_id, status).with_context(|| anyhow!("Failed to update Epic status"))?;
                 }
             }
             Action::DeleteEpic { epic_id } => {
