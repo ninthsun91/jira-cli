@@ -55,8 +55,8 @@ impl Navigator {
                 }
             }
             Action::DeleteEpic { epic_id } => {
-                let is_deleted = self.prompts.delete_epic.as_ref()();
-                if is_deleted {
+                let should_delete = self.prompts.delete_epic.as_ref()();
+                if should_delete {
                     self.db.delete_epic(epic_id).with_context(|| anyhow!("Failed to delete Epic {}", epic_id))?;
                 }
             }
@@ -71,7 +71,10 @@ impl Navigator {
                 }
             }
             Action::DeleteStory { epic_id, story_id } => {
-                // prompt the user to delete the story and persist it in the database
+                let should_delete = self.prompts.delete_story.as_ref()();
+                if should_delete {
+                    self.db.delete_story(epic_id, story_id).with_context(|| anyhow!("Failed to delete Story {} in Epic {}", story_id, epic_id))?;
+                }
             }
             Action::Exit => {
                 self.pages.clear();
