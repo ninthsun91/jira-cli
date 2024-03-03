@@ -49,7 +49,6 @@ impl Navigator {
                 self.db.create_epic(epic).with_context(|| anyhow!("Failed to create Epic"))?;
             }
             Action::UpdateEpicStatus { epic_id } => {
-                // prompt the user to update status and persist it in the database
                 let status = self.prompts.update_status.as_ref()();
                 if let Some(status) = status {
                     self.db.update_epic_status(epic_id, status).with_context(|| anyhow!("Failed to update Epic status"))?;
@@ -57,6 +56,10 @@ impl Navigator {
             }
             Action::DeleteEpic { epic_id } => {
                 // prompt the user to delete the epic and persist it in the database
+                let is_deleted = self.prompts.delete_epic.as_ref()();
+                if is_deleted {
+                    self.db.delete_epic(epic_id).with_context(|| anyhow!("Failed to delete Epic {}", epic_id))?;
+                }
             }
             Action::CreateStory { epic_id } => {
                 // prompt the user to create a new story and persist it in the database
